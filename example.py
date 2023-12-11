@@ -3,9 +3,8 @@ from matplotlib import pyplot as plt
 import pandas as pd
 import csv
 
-df = 0
 def main():
-    global df
+    
     pitstops = pd.read_csv("archive/pit_stops.csv")
     results = pd.read_csv("archive/results.csv")
 
@@ -18,7 +17,6 @@ def main():
 
         fields = ['driverId', 'avg_pitstop_time', 'position']
         csvwriter.writerow(fields)
-
 
         #Extract Data
         race_data = pitstops[pitstops['raceId'] == race_id] #Get all pitstop entries with the same race id
@@ -39,6 +37,4 @@ def main():
             csvwriter.writerow([driver_id, avg_pitstop_time, position])
             #new_df.append(new_row, ignore_index=True)
 
-
 main()
-    
