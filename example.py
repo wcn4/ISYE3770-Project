@@ -42,7 +42,9 @@ def create_histogram(race_id, bins=20):
     plt.xlabel('Pitstop Time in Milliseconds')
     plt.ylabel('Frequency')
     plt.title(f"Average Pitstop Time Histogram for Race {race_id}")
-    plt.show()
+    plt.savefig(f"race_pitstop_histograms/race_{race_id}.png")
+    #plt.show()
+
 
 def generate_relative_differences():
     pitstops = pd.read_csv("archive/pit_stops.csv")
@@ -87,7 +89,7 @@ def show_scatter():
     relative_diff_data = relative_diff_data[relative_diff_data['position'] != r'\N']
     relative_diff_data = relative_diff_data[relative_diff_data['relative_diff'].notna()]
 
-    relative_diff_data = relative_diff_data[np.abs(relative_diff_data['relative_diff']) < 0.1]
+    #relative_diff_data = relative_diff_data[np.abs(relative_diff_data['relative_diff']) < 0.1]
 
     relative_diffs = np.array(relative_diff_data['relative_diff'])
     positions = np.array(relative_diff_data['position'])
@@ -95,7 +97,17 @@ def show_scatter():
 
     b, m = np.polynomial.polynomial.polyfit(relative_diffs, positions, deg=1)
 
-    
+
+    # Calculate predicted values
+    predicted_positions = b + m * relative_diffs
+
+    # Calculate R-squared value
+    ss_total = np.sum((positions - np.mean(positions))**2)
+    ss_residual = np.sum((positions - predicted_positions)**2)
+    r_squared = 1 - (ss_residual / ss_total)
+
+    print(f"y=mx+b where:\nm: {m}\nb: {b}\nR^2: {r_squared}")
+
     plt.plot(relative_diffs, (m * relative_diffs) + b, '-', color='orange')
     plt.scatter(relative_diffs, positions)
     plt.show()
@@ -104,9 +116,11 @@ def show_scatter():
 
 
 #create_csv()
-#for x in range(841, 1121):
-#    create_histogram(x)
+#pitstops = pd.read_csv("archive/pit_stops.csv")
+#race_ids = pitstops['raceId'].unique()
+#for race_id in race_ids:
+#    create_histogram(race_id)
 
 #generate_relative_differences()
 
-show_scatter()
+#show_scatter()
