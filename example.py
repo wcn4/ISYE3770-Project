@@ -38,10 +38,11 @@ def create_csv():
 def create_histogram(race_id, bins=20):
     race_results = pd.read_csv(f"pitstop_results/race_{race_id}.csv")
     pitstop_times = np.array(race_results['avg_pitstop_time'])
-    plt.hist(pitstop_times, bins='auto')
+    plt.cla()
     plt.xlabel('Pitstop Time in Milliseconds')
     plt.ylabel('Frequency')
     plt.title(f"Average Pitstop Time Histogram for Race {race_id}")
+    plt.hist(pitstop_times, bins='auto', color='lightsteelblue', edgecolor='black')
     plt.savefig(f"race_pitstop_histograms/race_{race_id}.png")
     #plt.show()
 
@@ -116,10 +117,13 @@ def show_scatter():
 
 
 #create_csv()
-#pitstops = pd.read_csv("archive/pit_stops.csv")
-#race_ids = pitstops['raceId'].unique()
-#for race_id in race_ids:
-#    create_histogram(race_id)
+pitstops = pd.read_csv("archive/pit_stops.csv")
+race_ids = pitstops['raceId'].unique()
+for race_id in race_ids:
+    print(f"Creating histogram for race_id: {race_id}, the datatype: {type(race_id)}")
+    create_histogram(race_id)
+
+#create_histogram(841)
 
 #generate_relative_differences()
 
